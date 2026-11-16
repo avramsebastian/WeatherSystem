@@ -1,0 +1,5 @@
+Weather System
+Team Members: Alexandru Larisa, Andrei Denis, Avram Sebastian, Balaita Ioana
+
+Credits:
+Terrain Textures Pack Free – Objective Environment (Unity Asset Store)
