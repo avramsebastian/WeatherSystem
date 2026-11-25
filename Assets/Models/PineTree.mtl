@@ -1,0 +1,4 @@
+newmtl PineTrunkMaterial
+Kd 0.35 0.20 0.10
+newmtl PineNeedlesMaterial
+Kd 0.12 0.35 0.15
