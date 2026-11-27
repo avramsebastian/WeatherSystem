@@ -2,24 +2,12 @@ using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour
 {
-    [Header("Light & Sky References")]
-    [Tooltip("Directional Light used as the Sun (falls back to RenderSettings.sun if empty)")]
-    public Light sunLight;
-
-    [Header("Time & Day-Night Cycle")]
-    [Range(0f, 24f)]
-    [Tooltip("Current time in 0 - 24 format (e.g., 14.5 = 14:30)")]
-    public float currentHour = 14.5f;
-
-    [Tooltip("How many in-game hours pass per real second (0 = paused / externally controlled)")]
-    public float hoursPerSecond = 0.5f;
-
-    [Tooltip("Sun rotation axis direction")]
-    public Vector3 sunAxis = Vector3.right;
-
-    [Header("Light Color & Intensity")]
-    public Gradient sunColorByTime;
-    public AnimationCurve sunIntensityByTime = new AnimationCurve(
+    [SerializeField] private Light sunLight;
+    [SerializeField, Range(0f, 24f)] private float currentHour = 14.5f;
+    [SerializeField] private float hoursPerSecond = 0.5f;
+    [SerializeField] private Vector3 sunAxis = Vector3.right;
+    [SerializeField] private Gradient sunColorByTime;
+    [SerializeField] private AnimationCurve sunIntensityByTime = new AnimationCurve(
         new Keyframe(0f, 0.05f),
         new Keyframe(5.5f, 0.2f),
         new Keyframe(7f, 1.5f),
@@ -28,6 +16,8 @@ public class DayNightCycle : MonoBehaviour
         new Keyframe(20f, 0.2f),
         new Keyframe(24f, 0.05f)
     );
+
+    public float CurrentHour => currentHour;
 
     public string FormattedTime
     {
@@ -49,15 +39,15 @@ public class DayNightCycle : MonoBehaviour
 
         if (sunColorByTime == null || sunColorByTime.colorKeys.Length == 0)
         {
-            Gradient g = new Gradient();
-            g.SetKeys(
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
                 new GradientColorKey[]
                 {
-                    new GradientColorKey(new Color(0.15f, 0.22f, 0.45f), 0.0f),  
-                    new GradientColorKey(new Color(1.0f, 0.55f, 0.35f), 0.25f),  
-                    new GradientColorKey(new Color(1.0f, 0.96f, 0.88f), 0.50f), 
-                    new GradientColorKey(new Color(1.0f, 0.48f, 0.25f), 0.75f), 
-                    new GradientColorKey(new Color(0.15f, 0.22f, 0.45f), 1.0f)   
+                    new GradientColorKey(new Color(0.15f, 0.22f, 0.45f), 0.0f),
+                    new GradientColorKey(new Color(1.0f, 0.55f, 0.35f), 0.25f),
+                    new GradientColorKey(new Color(1.0f, 0.96f, 0.88f), 0.50f),
+                    new GradientColorKey(new Color(1.0f, 0.48f, 0.25f), 0.75f),
+                    new GradientColorKey(new Color(0.15f, 0.22f, 0.45f), 1.0f)
                 },
                 new GradientAlphaKey[]
                 {
@@ -65,7 +55,7 @@ public class DayNightCycle : MonoBehaviour
                     new GradientAlphaKey(1f, 1f)
                 }
             );
-            sunColorByTime = g;
+            sunColorByTime = gradient;
         }
     }
 
@@ -95,8 +85,8 @@ public class DayNightCycle : MonoBehaviour
     {
         if (sunLight == null) return;
 
-        float dayProgress = currentHour / 24f; 
-        float sunAngle = (currentHour - 6f) * 15f; 
+        float dayProgress = currentHour / 24f;
+        float sunAngle = (currentHour - 6f) * 15f;
         sunLight.transform.localRotation = Quaternion.Euler(sunAngle, -30f, 0f);
 
         sunLight.color = sunColorByTime.Evaluate(dayProgress);
